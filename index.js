@@ -53,11 +53,18 @@ async function run() {
     })
 
 
-    app.post('/hotelListData',async(req, res)=>{
-      const newItem = req.body;
-      const result = await hotelDataCollection.insertOne(newItem);
-      res.send(result);
-    })
+    app.post('/hotelListData', async (req, res) => {
+      try {
+        const newItem = req.body;
+        console.log(newItem);
+        const result = await hotelListDataCollection.insertOne(newItem); // Corrected collection name
+        res.send(result);
+      } catch (error) {
+        console.error('Error inserting into hotel list data:', error);
+        res.status(500).send('Internal Server Error');
+      }
+    });
+    
 
 
     app.get('/earningList', async(req, res)=>{
