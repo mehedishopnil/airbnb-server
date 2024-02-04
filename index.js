@@ -26,7 +26,8 @@ async function run() {
 
     // Get the database and collection on which to run the operation
     const hotelDataCollection = client.db("airbnbDB").collection("hotelData");
-    const hotelListDataCollection = client.db("airbnbDB").collection("hotelListData")
+    const hotelListDataCollection = client.db("airbnbDB").collection("hotelListData");
+    const earningListCollection = client.db("airbnbDB").collection("earningList")
 
     // Define route after connection is established
     app.get('/hotelData', async (req, res) => {
@@ -39,13 +40,32 @@ async function run() {
       }
     });
 
-    
+    //Hotel List data Operation::
     app.get('/hotelListData', async(req, res)=>{
       try{
         const result = await hotelListDataCollection.find().toArray();
         res.send(result)
       }
       catch (error) {
+        console.error('Error fetching hotel data:', error);
+        res.status(500).send('Internal Server Error');
+      }
+    })
+
+
+    app.post('/hotelListData',async(req, res)=>{
+      const newItem = req.body;
+      const result = await hotelDataCollection.insertOne(newItem);
+      res.send(result);
+    })
+
+
+    app.get('/earningList', async(req, res)=>{
+      try{
+        const result = await earningListCollection.find().toArray();
+        res.send(result);
+      }
+      catch (error){
         console.error('Error fetching hotel data:', error);
         res.status(500).send('Internal Server Error');
       }
